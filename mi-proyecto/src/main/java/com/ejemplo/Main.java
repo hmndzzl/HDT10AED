@@ -101,7 +101,7 @@ public class Main {
             }
             
             // Initialize Floyd-Warshall algorithm
-            floyd = new FloydWarshall(graph);
+            floyd = new Floyd(graph);
             floyd.executeFloyd(Graph.NORMAL); // Use normal weather by default
             
             System.out.println("Sistema inicializado con " + graph.getNumCities() + " ciudades.");
