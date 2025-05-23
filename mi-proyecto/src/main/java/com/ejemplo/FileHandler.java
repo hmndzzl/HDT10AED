@@ -7,13 +7,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Handles file operations for reading and writing graph data
+ * Maneja las operaciones de archivos para la lectura y escritura de datos del grafo.
  */
 public class FileHandler {
     
     /**
-     * Read graph data from file
-     * File format: ciudad1 ciudad2 tiempoNormal tiempoLluvia tiempoNieve tiempoTormenta
+     * Lee los datos del grafo desde un archivo.
+     * Formato del archivo: ciudad1 ciudad2 tiempoNormal tiempoLluvia tiempoNieve tiempoTormenta
+     * 
+     * @param filename Nombre del archivo desde donde se leerán los datos.
+     * @return Un objeto Graph con los datos cargados.
+     * @throws IOException Si ocurre un error al leer el archivo.
      */
     public static Graph readGraphFromFile(String filename) throws IOException {
         Graph graph = new Graph();
@@ -26,7 +30,7 @@ public class FileHandler {
                 lineNumber++;
                 line = line.trim();
                 
-                // Skip empty lines
+                // Omitir líneas vacías
                 if (line.isEmpty()) {
                     continue;
                 }
@@ -35,8 +39,8 @@ public class FileHandler {
                     String[] parts = line.split("\\s+");
                     
                     if (parts.length != 6) {
-                        System.err.println("Warning: Line " + lineNumber + 
-                            " has incorrect format. Expected 6 values, found " + parts.length);
+                        System.err.println("Advertencia: Línea " + lineNumber + 
+                            " tiene formato incorrecto. Se esperaban 6 valores, se encontraron " + parts.length);
                         continue;
                     }
                     
@@ -50,8 +54,8 @@ public class FileHandler {
                     graph.addEdge(city1, city2, normalTime, rainTime, snowTime, stormTime);
                     
                 } catch (NumberFormatException e) {
-                    System.err.println("Warning: Line " + lineNumber + 
-                        " contains invalid number format: " + line);
+                    System.err.println("Advertencia: Línea " + lineNumber + 
+                        " contiene formato numérico inválido: " + line);
                 }
             }
         }
@@ -60,7 +64,10 @@ public class FileHandler {
     }
     
     /**
-     * Create a sample logistica.txt file for testing
+     * Crea un archivo de ejemplo 'logistica.txt' para pruebas.
+     * 
+     * @param filename Nombre del archivo a crear.
+     * @throws IOException Si ocurre un error al escribir el archivo.
      */
     public static void createSampleFile(String filename) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
@@ -77,11 +84,15 @@ public class FileHandler {
             writer.println("Montevideo SaoPaulo 12 15 18 30");
         }
         
-        System.out.println("Sample file '" + filename + "' created successfully.");
+        System.out.println("Archivo de ejemplo '" + filename + "' creado exitosamente.");
     }
     
     /**
-     * Save graph data to file
+     * Guarda los datos del grafo en un archivo.
+     * 
+     * @param graph El grafo cuyos datos se guardarán.
+     * @param filename Nombre del archivo donde se guardarán los datos.
+     * @throws IOException Si ocurre un error al escribir el archivo.
      */
     public static void saveGraphToFile(Graph graph, String filename) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
@@ -100,20 +111,20 @@ public class FileHandler {
             }
         }
         
-        System.out.println("Graph saved to '" + filename + "' successfully.");
+        System.out.println("Grafo guardado en '" + filename + "' exitosamente.");
     }
     
     /**
-     * Display file reading instructions
+     * Muestra las instrucciones del formato del archivo.
      */
     public static void displayFileFormat() {
-        System.out.println("\nFile format for logistica.txt:");
-        System.out.println("Each line should contain:");
+        System.out.println("\nFormato del archivo para logistica.txt:");
+        System.out.println("Cada línea debe contener:");
         System.out.println("Ciudad1 Ciudad2 tiempoNormal tiempoLluvia tiempoNieve tiempoTormenta");
-        System.out.println("\nExample:");
+        System.out.println("\nEjemplo:");
         System.out.println("BuenosAires SaoPaulo 10 15 20 50");
         System.out.println("BuenosAires Lima 15 20 30 70");
         System.out.println("Lima Quito 10 12 15 20");
-        System.out.println("\nNote: City names should not contain spaces.");
+        System.out.println("\nNota: Los nombres de las ciudades no deben contener espacios.");
     }
 }

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implementation of Floyd-Warshall algorithm for finding shortest paths
- * between all pairs of vertices in a weighted graph
+ * Implementación del algoritmo de Floyd para encontrar las rutas más cortas
+ * entre todos los pares de vértices en un grafo ponderado.
  */
 public class Floyd {
     private double[][] distance;
@@ -16,6 +16,11 @@ public class Floyd {
     private int numCities;
     private static final double INFINITY = Double.MAX_VALUE;
     
+    /**
+     * Constructor que inicializa el algoritmo con un grafo dado.
+     * 
+     * @param graph El grafo sobre el cual se ejecutará el algoritmo.
+     */
     public Floyd(Graph graph) {
         this.graph = graph;
         this.numCities = graph.getNumCities();
@@ -24,12 +29,14 @@ public class Floyd {
     }
     
     /**
-     * Execute Floyd-Warshall algorithm for a specific weather condition
+     * Ejecuta el algoritmo de Floyd para una condición climática específica.
+     * 
+     * @param weatherCondition Condición climática para la cual se calcularán las rutas.
      */
     public void executeFloyd(int weatherCondition) {
         initializeMatrices(weatherCondition);
         
-        // Floyd-Warshall main algorithm
+        // Algoritmo principal de Floyd
         for (int k = 0; k < numCities; k++) {
             for (int i = 0; i < numCities; i++) {
                 for (int j = 0; j < numCities; j++) {
@@ -46,7 +53,9 @@ public class Floyd {
     }
     
     /**
-     * Initialize distance and next matrices
+     * Inicializa las matrices de distancia y siguiente nodo.
+     * 
+     * @param weatherCondition Condición climática para inicializar la matriz de adyacencia.
      */
     private void initializeMatrices(int weatherCondition) {
         double[][] adjMatrix = graph.getAdjacencyMatrix(weatherCondition);
@@ -60,11 +69,14 @@ public class Floyd {
                     next[i][j] = -1;
                 }
             }
-        }
+        } 
     }
-    
     /**
-     * Get shortest distance between two cities
+     * Obtiene la distancia más corta entre dos ciudades.
+     * 
+     * @param fromCity Ciudad de origen.
+     * @param toCity Ciudad destino.
+     * @return La distancia más corta o infinito si no existe ruta.
      */
     public double getShortestDistance(String fromCity, String toCity) {
         Integer fromIndex = graph.getCityIndex(fromCity);
@@ -78,7 +90,11 @@ public class Floyd {
     }
     
     /**
-     * Get shortest path between two cities
+     * Obtiene la ruta más corta entre dos ciudades.
+     * 
+     * @param fromCity Ciudad de origen.
+     * @param toCity Ciudad destino.
+     * @return Lista de nombres de ciudades que forman la ruta más corta.
      */
     public List<String> getShortestPath(String fromCity, String toCity) {
         Integer fromIndex = graph.getCityIndex(fromCity);
@@ -95,7 +111,7 @@ public class Floyd {
         while (current != toIndex) {
             current = next[current][toIndex];
             if (current == -1) {
-                return new ArrayList<>(); // No path exists
+                return new ArrayList<>(); // No existe ruta
             }
             path.add(graph.getCityName(current));
         }
@@ -104,8 +120,10 @@ public class Floyd {
     }
     
     /**
-     * Calculate the center of the graph
-     * The center is the vertex that minimizes the maximum distance to any other vertex
+     * Calcula el centro del grafo.
+     * El centro es el vértice que minimiza la distancia máxima a cualquier otro vértice.
+     * 
+     * @return Nombre de la ciudad que es el centro del grafo o null si el grafo está vacío.
      */
     public String calculateGraphCenter() {
         if (numCities == 0) {
@@ -134,19 +152,19 @@ public class Floyd {
     }
     
     /**
-     * Display the distance matrix
+     * Muestra la matriz de distancias más cortas.
      */
     public void displayDistanceMatrix() {
-        System.out.println("\nShortest Distance Matrix:");
+        System.out.println("\nMatriz de Distancias Más Cortas:");
         
-        // Print header
+        // Imprimir encabezado
         System.out.print("\t\t");
         for (int j = 0; j < numCities; j++) {
             System.out.printf("%-12s", graph.getCityName(j));
         }
         System.out.println();
         
-        // Print matrix
+        // Imprimir matriz
         for (int i = 0; i < numCities; i++) {
             System.out.printf("%-12s", graph.getCityName(i));
             for (int j = 0; j < numCities; j++) {
@@ -161,7 +179,10 @@ public class Floyd {
     }
     
     /**
-     * Get all shortest distances from a specific city
+     * Obtiene todas las distancias más cortas desde una ciudad específica.
+     * 
+     * @param fromCity Ciudad de origen.
+     * @return Mapa con ciudades destino y sus distancias desde la ciudad de origen.
      */
     public Map<String, Double> getDistancesFrom(String fromCity) {
         Integer fromIndex = graph.getCityIndex(fromCity);
@@ -180,7 +201,11 @@ public class Floyd {
     }
     
     /**
-     * Check if there's a path between two cities
+     * Verifica si existe una ruta entre dos ciudades.
+     * 
+     * @param fromCity Ciudad de origen.
+     * @param toCity Ciudad destino.
+     * @return true si existe ruta, false en caso contrario.
      */
     public boolean hasPath(String fromCity, String toCity) {
         return getShortestDistance(fromCity, toCity) != INFINITY;

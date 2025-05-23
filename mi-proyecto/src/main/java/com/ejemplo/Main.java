@@ -1,3 +1,9 @@
+// Algotrimos Y Estructuras de Datos
+// Sección 10
+// Hugo Méndez - 241265
+// Arodi Chávez - 241112
+
+// Hoja De Trabajo 10 - Algoritmo de Floyd
 package com.ejemplo;
 
 import java.io.IOException;
@@ -6,7 +12,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * Main program for logistics routing system using Floyd-Warshall algorithm
+ * Programa principal para el sistema de rutas logísticas usando el algoritmo de Floyd.
  */
 public class Main {
     private Graph graph;
@@ -14,29 +20,37 @@ public class Main {
     private Scanner scanner;
     private static final String DEFAULT_FILENAME = "logistica.txt";
     
+    /**
+     * Constructor que inicializa el escáner para entrada de usuario.
+     */
     public Main() {
         this.scanner = new Scanner(System.in);
     }
     
+    /**
+     * Método principal que inicia la ejecución del programa.
+     * 
+     * @param args Argumentos de línea de comandos (no usados).
+     */
     public static void main(String[] args) {
         Main system = new Main();
         system.run();
     }
     
     /**
-     * Main program loop
+     * Bucle principal del programa.
      */
     public void run() {
-        System.out.println("=== Logistics Routing System ===");
-        System.out.println("Floyd-Warshall Algorithm Implementation");
+        System.out.println("=== Sistema de Rutas Logísticas ===");
+        System.out.println("Implementación del Algoritmo Floyd");
         System.out.println("=====================================\n");
         
-        // Initialize the system
+        // Inicializa el sistema
         if (!initializeSystem()) {
             return;
         }
         
-        // Main menu loop
+        // Bucle del menú principal
         boolean running = true;
         while (running) {
             displayMenu();
@@ -73,11 +87,13 @@ public class Main {
     }
     
     /**
-     * Initialize the system by loading graph data
+     * Inicializa el sistema cargando los datos del grafo.
+     * 
+     * @return true si la inicialización fue exitosa, false en caso contrario.
      */
     private boolean initializeSystem() {
         try {
-            // Try to load existing file
+            // Intenta cargar archivo existente
             try {
                 graph = FileHandler.readGraphFromFile(DEFAULT_FILENAME);
                 System.out.println("Archivo '" + DEFAULT_FILENAME + "' cargado exitosamente.");
@@ -101,9 +117,9 @@ public class Main {
                 return false;
             }
             
-            // Initialize Floyd-Warshall algorithm
+            // Inicializa el algoritmo Floyd
             floyd = new Floyd(graph);
-            floyd.executeFloyd(Graph.NORMAL); // Use normal weather by default
+            floyd.executeFloyd(Graph.NORMAL); // Usa clima normal por defecto
             
             System.out.println("Sistema inicializado con " + graph.getNumCities() + " ciudades.");
             System.out.println("Ciudades disponibles: " + graph.getCities());
@@ -117,7 +133,7 @@ public class Main {
     }
     
     /**
-     * Display main menu
+     * Muestra el menú principal.
      */
     private void displayMenu() {
         System.out.println("\n=== MENÚ PRINCIPAL ===");
@@ -130,7 +146,9 @@ public class Main {
     }
     
     /**
-     * Get menu choice from user
+     * Obtiene la opción del menú ingresada por el usuario.
+     * 
+     * @return Número de opción o -1 si la entrada es inválida.
      */
     private int getMenuChoice() {
         try {
@@ -142,7 +160,7 @@ public class Main {
     }
     
     /**
-     * Find and display shortest route between two cities
+     * Encuentra y muestra la ruta más corta entre dos ciudades.
      */
     private void findShortestRoute() {
         System.out.println("\n=== ENCONTRAR RUTA MÁS CORTA ===");
@@ -174,7 +192,7 @@ public class Main {
             System.out.printf("Distancia total: %.1f horas\n", distance);
             System.out.println("Ruta: " + String.join(" -> ", path));
             
-            // Show intermediate cities
+            // Mostrar ciudades intermedias
             if (path.size() > 2) {
                 System.out.println("Ciudades intermedias: " + 
                     String.join(", ", path.subList(1, path.size() - 1)));
@@ -183,7 +201,7 @@ public class Main {
     }
     
     /**
-     * Display graph center
+     * Muestra el centro del grafo.
      */
     private void displayGraphCenter() {
         System.out.println("\n=== CENTRO DEL GRAFO ===");
@@ -192,7 +210,7 @@ public class Main {
         if (center != null) {
             System.out.println("El centro del grafo es: " + center);
             
-            // Show distances from center to all other cities
+            // Mostrar distancias desde el centro a todas las demás ciudades
             System.out.println("\nDistancias desde el centro:");
             Map<String, Double> distances = floyd.getDistancesFrom(center);
             for (Map.Entry<String, Double> entry : distances.entrySet()) {
@@ -207,7 +225,7 @@ public class Main {
     }
     
     /**
-     * Modify graph (add/remove edges, change weather conditions)
+     * Modifica el grafo (agregar/eliminar aristas, cambiar condiciones climáticas).
      */
     private void modifyGraph() {
         System.out.println("\n=== MODIFICAR GRAFO ===");
@@ -233,13 +251,13 @@ public class Main {
                 return;
         }
         
-        // Recalculate shortest paths and center
+        // Recalcula rutas y centro
         floyd.executeFloyd(Graph.NORMAL);
         System.out.println("Rutas recalculadas exitosamente.");
     }
     
     /**
-     * Interrupt traffic between two cities
+     * Interrumpe el tráfico entre dos ciudades.
      */
     private void interruptTraffic() {
         System.out.println("Ciudades disponibles: " + graph.getCities());
@@ -257,7 +275,7 @@ public class Main {
     }
     
     /**
-     * Add new connection between cities
+     * Establece una nueva conexión entre ciudades.
      */
     private void addNewConnection() {
         System.out.println("Ciudades disponibles: " + graph.getCities());
@@ -285,7 +303,7 @@ public class Main {
     }
     
     /**
-     * Change weather condition for existing connection
+     * Cambia la condición climática para una conexión existente.
      */
     private void changeWeatherCondition() {
         System.out.println("Ciudades disponibles: " + graph.getCities());
@@ -325,20 +343,20 @@ public class Main {
     }
     
     /**
-     * Display graph information
+     * Muestra la información del grafo.
      */
     private void displayGraphInfo() {
         System.out.println("\n=== INFORMACIÓN DEL GRAFO ===");
         System.out.println("Número de ciudades: " + graph.getNumCities());
         System.out.println("Ciudades: " + graph.getCities());
         
-        // Display adjacency matrix for normal weather
+        // Muestra la matriz de adyacencia para clima normal
         graph.displayMatrix(Graph.NORMAL);
         
-        // Display shortest distance matrix
+        // Muestra la matriz de distancias más cortas
         floyd.displayDistanceMatrix();
         
-        // Save current state
+        // Guarda el estado actual
         try {
             FileHandler.saveGraphToFile(graph, "logistica_current.txt");
             System.out.println("Estado actual guardado en 'logistica_current.txt'");
