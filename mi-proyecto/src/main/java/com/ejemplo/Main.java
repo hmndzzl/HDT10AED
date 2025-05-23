@@ -2,6 +2,7 @@ package com.ejemplo;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -193,8 +194,8 @@ public class Main {
             
             // Show distances from center to all other cities
             System.out.println("\nDistancias desde el centro:");
-            var distances = floyd.getDistancesFrom(center);
-            for (var entry : distances.entrySet()) {
+            Map<String, Double> distances = floyd.getDistancesFrom(center);
+            for (Map.Entry<String, Double> entry : distances.entrySet()) {
                 if (entry.getValue() != Double.MAX_VALUE) {
                     System.out.printf("%s -> %s: %.1f horas\n", 
                         center, entry.getKey(), entry.getValue());

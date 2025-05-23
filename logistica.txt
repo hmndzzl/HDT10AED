@@ -1,0 +1,11 @@
+BuenosAires SaoPaulo 10 15 20 50
+BuenosAires Lima 15 20 30 70
+Lima Quito 10 12 15 20
+SaoPaulo Lima 8 10 12 25
+SaoPaulo Quito 20 25 30 60
+Quito Bogota 5 8 10 15
+Lima Bogota 12 15 18 35
+Bogota Caracas 8 10 12 20
+SaoPaulo Caracas 25 30 35 70
+BuenosAires Montevideo 3 4 5 8
+Montevideo SaoPaulo 12 15 18 30
