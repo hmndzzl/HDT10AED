@@ -13,16 +13,27 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * JUnit tests for Graph and Floyd-Warshall algorithm implementation
+ * Pruebas JUnit para la implementación del grafo y el algoritmo de Floyd-Warshall.
  */
 public class Tests {
+    /**
+     * Instancia del grafo para las pruebas.
+     */
     private Graph graph;
+    
+    /**
+     * Instancia del algoritmo de Floyd para las pruebas.
+     */
     private Floyd floyd;
     
+    /**
+     * Configuración inicial antes de cada prueba.
+     * Crea un grafo de prueba con varias aristas y ejecuta el algoritmo de Floyd.
+     */
     @BeforeEach
     void setUp() {
         graph = new Graph();
-        // Create a test graph
+        // Crear un grafo de prueba
         graph.addEdge("A", "B", 5, 7, 9, 15);
         graph.addEdge("A", "C", 3, 4, 6, 10);
         graph.addEdge("B", "C", 2, 3, 4, 8);
@@ -33,6 +44,9 @@ public class Tests {
         floyd.executeFloyd(Graph.NORMAL);
     }
     
+    /**
+     * Prueba para agregar ciudades al grafo.
+     */
     @Test
     @DisplayName("Test adding cities to graph")
     void testAddCity() {
@@ -45,6 +59,9 @@ public class Tests {
         assertEquals(Integer.valueOf(0), testGraph.getCityIndex("TestCity"));
     }
     
+    /**
+     * Prueba para agregar aristas con múltiples condiciones climáticas.
+     */
     @Test
     @DisplayName("Test adding edges with multiple weather conditions")
     void testAddEdge() {
@@ -58,6 +75,9 @@ public class Tests {
         assertEquals(30.0, testGraph.getEdgeWeight("City1", "City2", Graph.STORM));
     }
     
+    /**
+     * Prueba para eliminar aristas del grafo.
+     */
     @Test
     @DisplayName("Test removing edges")
     void testRemoveEdge() {
@@ -69,6 +89,9 @@ public class Tests {
         assertEquals(Double.MAX_VALUE, graph.getEdgeWeight("A", "B", Graph.NORMAL));
     }
     
+    /**
+     * Prueba para actualizar las condiciones climáticas de una arista.
+     */
     @Test
     @DisplayName("Test updating weather conditions")
     void testUpdateWeatherCondition() {
@@ -79,21 +102,26 @@ public class Tests {
         assertNotEquals(originalTime, graph.getEdgeWeight("A", "B", Graph.RAIN));
     }
     
+    /**
+     * Prueba para calcular la distancia más corta usando Floyd-Warshall.
+     */
     @Test
     @DisplayName("Test Floyd-Warshall shortest distance calculation")
     void testFloydShortestDistance() {
-        // Direct path A -> B should be 5
+        // El camino directo A -> B debería ser 5
         assertEquals(5.0, floyd.getShortestDistance("A", "B"));
         
-        // Path A -> C should be 3 (direct)
+        // El camino A -> C debería ser 3 (directo)
         assertEquals(3.0, floyd.getShortestDistance("A", "C"));
         
-        // Path A -> D should be 5 (A->C->B->D = 3+2+6 = 11, but A->B->D = 5+6 = 11)
-        // Actually, shortest should be A->C->B->D = 3+2+6 = 11
+        // El camino A -> D debería ser 11 (A->C->B->D = 3+2+6 = 11, o A->B->D = 5+6 = 11)
         double distanceAD = floyd.getShortestDistance("A", "D");
         assertTrue(distanceAD <= 11.0);
     }
     
+    /**
+     * Prueba para reconstruir el camino más corto usando Floyd-Warshall.
+     */
     @Test
     @DisplayName("Test Floyd-Warshall shortest path reconstruction")
     void testFloydShortestPath() {
@@ -103,15 +131,18 @@ public class Tests {
         assertEquals("A", path.get(0));
         assertEquals("D", path.get(path.size() - 1));
         
-        // Verify path continuity
+        // Verificar la continuidad del camino
         for (int i = 0; i < path.size() - 1; i++) {
             String current = path.get(i);
             String next = path.get(i + 1);
             assertTrue(graph.hasEdge(current, next, Graph.NORMAL),
-                "Edge should exist between " + current + " and " + next);
+                "Debe existir una arista entre " + current + " y " + next);
         }
     }
     
+    /**
+     * Prueba para verificar la existencia de un camino entre dos nodos.
+     */
     @Test
     @DisplayName("Test path existence")
     void testHasPath() {
@@ -119,10 +150,10 @@ public class Tests {
         assertTrue(floyd.hasPath("A", "B"));
         assertTrue(floyd.hasPath("A", "C"));
         
-        // Test non-existent path (if we remove all connections to a node)
+        // Prueba de camino inexistente (si se eliminan todas las conexiones a un nodo)
         Graph isolatedGraph = new Graph();
         isolatedGraph.addEdge("X", "Y", 5, 7, 9, 15);
-        isolatedGraph.addCity("Z"); // Z is isolated
+        isolatedGraph.addCity("Z"); // Z está aislado
         
         Floyd isolatedFloyd = new Floyd(isolatedGraph);
         isolatedFloyd.executeFloyd(Graph.NORMAL);
@@ -131,6 +162,9 @@ public class Tests {
         assertFalse(isolatedFloyd.hasPath("Z", "X"));
     }
     
+    /**
+     * Prueba para calcular el centro del grafo.
+     */
     @Test
     @DisplayName("Test graph center calculation")
     void testCalculateGraphCenter() {
@@ -138,10 +172,13 @@ public class Tests {
         assertNotNull(center);
         assertTrue(graph.getCities().contains(center));
         
-        // The center should be one of the cities in the graph
-        // and should minimize the maximum distance to other nodes
+        // El centro debe ser una de las ciudades del grafo
+        // y debe minimizar la distancia máxima a otros nodos
     }
     
+    /**
+     * Prueba para obtener la matriz de adyacencia del grafo.
+     */
     @Test
     @DisplayName("Test adjacency matrix retrieval")
     void testGetAdjacencyMatrix() {
@@ -150,17 +187,20 @@ public class Tests {
         assertEquals(graph.getNumCities(), matrix.length);
         assertEquals(graph.getNumCities(), matrix[0].length);
         
-        // Test diagonal should be 0
+        // La diagonal debe ser 0
         for (int i = 0; i < matrix.length; i++) {
             assertEquals(0.0, matrix[i][i]);
         }
         
-        // Test known edge
+        // Prueba de arista conocida
         int indexA = graph.getCityIndex("A");
         int indexB = graph.getCityIndex("B");
         assertEquals(5.0, matrix[indexA][indexB]);
     }
     
+    /**
+     * Prueba para operaciones con ciudades inválidas.
+     */
     @Test
     @DisplayName("Test invalid city operations")
     void testInvalidCityOperations() {
@@ -174,17 +214,20 @@ public class Tests {
         assertTrue(floyd.getShortestPath("NonExistent1", "NonExistent2").isEmpty());
     }
     
+    /**
+     * Prueba para los límites de las condiciones climáticas.
+     */
     @Test
     @DisplayName("Test weather condition boundaries")
     void testWeatherConditionBoundaries() {
-        // Test invalid weather condition
+        // Prueba condición climática inválida
         graph.updateWeatherCondition("A", "B", -1, 100.0);
         assertNotEquals(100.0, graph.getEdgeWeight("A", "B", Graph.NORMAL));
         
         graph.updateWeatherCondition("A", "B", 5, 100.0);
         assertNotEquals(100.0, graph.getEdgeWeight("A", "B", Graph.NORMAL));
         
-        // Test valid weather conditions
+        // Prueba condiciones climáticas válidas
         for (int weather = 0; weather < Graph.NUM_WEATHER_CONDITIONS; weather++) {
             double testValue = 50.0 + weather;
             graph.updateWeatherCondition("A", "B", weather, testValue);
@@ -192,6 +235,9 @@ public class Tests {
         }
     }
     
+    /**
+     * Prueba para grafo vacío.
+     */
     @Test
     @DisplayName("Test empty graph")
     void testEmptyGraph() {
@@ -203,6 +249,9 @@ public class Tests {
         assertNull(emptyFloyd.calculateGraphCenter());
     }
     
+    /**
+     * Prueba para grafo con un solo nodo.
+     */
     @Test
     @DisplayName("Test single node graph")
     void testSingleNodeGraph() {
